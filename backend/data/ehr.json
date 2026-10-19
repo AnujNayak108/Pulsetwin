@@ -1,0 +1,13 @@
+{
+  "id": "DEMO-10023",
+  "name": "Aarav Mehta",
+  "age": 52,
+  "gender": "Male",
+  "bmi": 28.5,
+  "baseline_hba1c": 7.2,
+  "history": ["Type 2 diabetes", "Hypertension"],
+  "medications": ["Metformin 500 mg"],
+  "risk_category": "Moderate",
+  "data_source": "synthetic",
+  "clinically_validated": false
+}
