@@ -159,6 +159,12 @@ Create a Render **Web Service** from this repository with:
 | Start Command | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
 | Health Check Path | `/api/patient` |
 
+Add this Render environment variable so the pinned Pydantic dependencies install from compatible Python 3.12 wheels instead of attempting a Rust source build on Python 3.14:
+
+| Variable | Value |
+|---|---|
+| `PYTHON_VERSION` | `3.12.8` |
+
 After deployment, copy the API's public `https://` URL. In Render's environment settings, set `FRONTEND_ORIGINS` to the dashboard's exact Vercel production origin (for example, `https://your-dashboard.vercel.app`, without a trailing slash). Update this value after the dashboard is deployed. The backend supports WebSocket connections at `/ws/stream`.
 
 ### Dashboard on Vercel
@@ -167,11 +173,13 @@ Import the repository into Vercel and set the project **Root Directory** to `fro
 
 | Variable | Value |
 |---|---|
-| `NEXT_PUBLIC_API_URL` | The Render API's public `https://` URL, without a trailing slash |
+| `NEXT_PUBLIC_API_URL` | `https://pulsetwin.onrender.com` |
 
 Deploy the dashboard, then set its production origin in the Render `FRONTEND_ORIGINS` setting and redeploy/restart the API. Vercel embeds `NEXT_PUBLIC_API_URL` at build time, so redeploy the dashboard after changing it. Check that the API profile loads, the live WebSocket stream connects, and the Counterfactual Twin Lab returns a comparison. Local synthetic fallback behavior does not confirm that the deployed API is connected.
 
-The deployment URLs will be added here after both services have been deployed and checked. Do not publish provider credentials or secrets in this repository.
+**Deployed API:** [https://pulsetwin.onrender.com](https://pulsetwin.onrender.com) (profile endpoint: [`/api/patient`](https://pulsetwin.onrender.com/api/patient); WebSocket endpoint: `wss://pulsetwin.onrender.com/ws/stream`).
+
+The frontend deployment URL will be added here after it has been deployed and checked. Do not publish provider credentials or secrets in this repository.
 
 ### Submission documents
 
@@ -199,7 +207,7 @@ The challenge submission form requires every item below to be included in the pu
 | Open-source license details | Included below: MIT License, linked to the repository's `LICENSE` file. |
 | Architecture diagram in PDF/PPT | Included: [docs/architecture.pdf](./docs/architecture.pdf). |
 | Presentation in PDF/PPT covering project details and outcomes | Included: [docs/project-presentation.pdf](./docs/project-presentation.pdf). The demonstration outcome is described above and explicitly separated from clinical validation. |
-| All files and links publicly accessible without extra permissions | **Pending final check.** Once published, verify the repository is Public and open every linked file/video in a signed-out or private browser window. Add the public repository URL above. |
+| All files and links publicly accessible without extra permissions | **Pending final check.** Verify the repository, PDFs, video, deployed API, and dashboard are publicly accessible; add the public repository and dashboard URLs above. |
 
 ### Required demo video link
 
@@ -212,7 +220,9 @@ The challenge submission form requires every item below to be included in the pu
 - [ ] Verify that the unlisted video opens without requesting extra permissions.
 - [ ] Add the real public GitHub URL to the team table.
 - [ ] Confirm the repository is Public and every PDF, README link, and video URL opens without requesting extra permissions.
-- [ ] Deploy the frontend and API, verify their connection, and add the live URLs above.
+- [x] Deploy the API; its patient profile endpoint responds with synthetic demo data.
+- [ ] Deploy the frontend, set `FRONTEND_ORIGINS` to its production URL in Render, redeploy the API, and verify the dashboard/API connection.
+- [ ] Add the dashboard deployment URL above.
 - [ ] Run the prototype from a clean setup; do not present demo indices or synthetic forecast behavior as measured model accuracy.
 - [ ] Use the required folder name: `Binaryspot_Birla Institute of Technology Mesra`.
 
