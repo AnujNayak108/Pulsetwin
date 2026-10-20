@@ -29,7 +29,7 @@ The names below were supplied by the team. Confirm each member's eligibility, re
 | Team leader and members (1–4 full-time students) | Anuj Nayak (team leader); Shlok Soni |
 | College / university | Birla Institute of Technology Mesra |
 | Incubator | Not specified |
-| Contact email | `[Add approved team contact email if required]` |
+| Contact email | anujnayak108@gmail.com |
 | Public GitHub repository | [AnujNayak108/Pulsetwin](https://github.com/AnujNayak108/Pulsetwin) |
 
 ## How it works
