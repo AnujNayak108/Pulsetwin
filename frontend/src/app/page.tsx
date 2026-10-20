@@ -303,8 +303,7 @@ function nextSimulationTimestamp(readings: Reading[]): Date {
     : new Date();
 }
 
-function seedReadings(): Reading[] {
-  const now = Date.now();
+function seedReadings(now = Date.now()): Reading[] {
   return Array.from({ length: 24 }, (_, index) => {
     const drift = index > 15 ? (index - 15) * 1.6 : 0;
     const glucose = 112 + Math.sin(index * 0.7) * 9 + drift;
@@ -338,7 +337,7 @@ function sparklineHeight(value: number, minimum: number, maximum: number) {
 export default function Home() {
   const [patient, setPatient] = useState<Patient>(initialPatient);
   const [profileSource, setProfileSource] = useState<"backend" | "local">("local");
-  const [readings, setReadings] = useState<Reading[]>(seedReadings);
+  const [readings, setReadings] = useState<Reading[]>(() => seedReadings(0));
   const [streaming, setStreaming] = useState(false);
   const [streamSource, setStreamSource] = useState<"idle" | "connecting" | "backend" | "local">("idle");
   const [replayStatus, setReplayStatus] = useState<"idle" | "playing" | "complete">("idle");
@@ -383,6 +382,11 @@ export default function Home() {
         { label: "Heart rate", value: risk.components.heart_rate, maximum: 0.1 },
       ]
     : [];
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setReadings(seedReadings()), 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
