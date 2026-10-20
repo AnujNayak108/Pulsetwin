@@ -144,6 +144,35 @@ These tests check the documented output shape, heuristic severity and bounds, sa
 
 To point the frontend at another API origin, set `NEXT_PUBLIC_API_URL` when starting the Next.js app. The backend permits the two standard local frontend origins by default. For a different local or deployed frontend, set `FRONTEND_ORIGINS` to a comma-separated allowlist (for example, `https://your-dashboard.example`). Cookie credentials are not enabled.
 
+## Deploy
+
+The dashboard and API are separate services. Deploy the API first, then configure and deploy the dashboard.
+
+### API on Render
+
+Create a Render **Web Service** from this repository with:
+
+| Setting | Value |
+|---|---|
+| Root Directory | `backend` |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+| Health Check Path | `/api/patient` |
+
+After deployment, copy the API's public `https://` URL. In Render's environment settings, set `FRONTEND_ORIGINS` to the dashboard's exact Vercel production origin (for example, `https://your-dashboard.vercel.app`, without a trailing slash). Update this value after the dashboard is deployed. The backend supports WebSocket connections at `/ws/stream`.
+
+### Dashboard on Vercel
+
+Import the repository into Vercel and set the project **Root Directory** to `frontend`. Add this environment variable before the first build:
+
+| Variable | Value |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | The Render API's public `https://` URL, without a trailing slash |
+
+Deploy the dashboard, then set its production origin in the Render `FRONTEND_ORIGINS` setting and redeploy/restart the API. Vercel embeds `NEXT_PUBLIC_API_URL` at build time, so redeploy the dashboard after changing it. Check that the API profile loads, the live WebSocket stream connects, and the Counterfactual Twin Lab returns a comparison. Local synthetic fallback behavior does not confirm that the deployed API is connected.
+
+The deployment URLs will be added here after both services have been deployed and checked. Do not publish provider credentials or secrets in this repository.
+
 ### Submission documents
 
 - Architecture diagram: [docs/architecture.pdf](./docs/architecture.pdf)
@@ -155,7 +184,7 @@ To point the frontend at another API origin, set `NEXT_PUBLIC_API_URL` when star
 
 ## Required README submission items
 
-The challenge submission form requires every item below to be included in the public repository README. Current status is shown honestly; do not mark video or public-access items complete until the team has supplied and checked them.
+The challenge submission form requires every item below to be included in the public repository README. Current status is shown honestly; verify public access before treating links as submission-ready.
 
 | Required item | Status and README location |
 |---|---|
@@ -166,7 +195,7 @@ The challenge submission form requires every item below to be included in the pu
 | Healthcare use case | Included above under “Problem statement and healthcare use case.” |
 | Technical stack | Included above under “Technical stack.” |
 | AI/ML model or framework details | Included above under “AI/ML model and framework details”; accurately states that the prototype does not train an ML model. |
-| 15–20 minute demo video, uploaded as an unlisted YouTube video, with link in README | **Pending team action.** Record a 20-minute walkthrough and replace the placeholder below with the unlisted video URL. This targets the upper end of the form's duration range and meets the challenge brief's 20-minute minimum. |
+| 15–20 minute demo video, uploaded as an unlisted YouTube video, with link in README | Included below: unlisted YouTube video. Verify that the link opens for viewers without extra permissions. |
 | Open-source license details | Included below: MIT License, linked to the repository's `LICENSE` file. |
 | Architecture diagram in PDF/PPT | Included: [docs/architecture.pdf](./docs/architecture.pdf). |
 | Presentation in PDF/PPT covering project details and outcomes | Included: [docs/project-presentation.pdf](./docs/project-presentation.pdf). The demonstration outcome is described above and explicitly separated from clinical validation. |
@@ -174,18 +203,17 @@ The challenge submission form requires every item below to be included in the pu
 
 ### Required demo video link
 
-**Unlisted YouTube video (target duration: 20 minutes):** `[Add the unlisted YouTube URL after recording and uploading]`
-
-Suggested 20-minute run of show: problem and intended user (3 min), synthetic data and privacy (3 min), architecture and model (4 min), working dashboard and scenarios (7 min), limitations, evaluation plan, and next steps (3 min).
+**Unlisted YouTube video:** [Watch the PulseTwin demo](https://youtu.be/nqqUgMyhAz4)
 
 ### Final pre-submission checks
 
 - [ ] Confirm team-member consent, full-time student eligibility, and registration information.
 - [ ] Confirm incubator status and replace the placeholder if applicable.
-- [ ] Record/upload the 20-minute video and replace the video-link placeholder above.
+- [ ] Verify that the unlisted video opens without requesting extra permissions.
 - [ ] Add the real public GitHub URL to the team table.
 - [ ] Confirm the repository is Public and every PDF, README link, and video URL opens without requesting extra permissions.
-- [ ] Run the prototype from a clean setup and capture genuine outputs; do not present demo indices or synthetic forecast behavior as measured model accuracy.
+- [ ] Deploy the frontend and API, verify their connection, and add the live URLs above.
+- [ ] Run the prototype from a clean setup; do not present demo indices or synthetic forecast behavior as measured model accuracy.
 - [ ] Use the required folder name: `Binaryspot_Birla Institute of Technology Mesra`.
 
 ## Evaluation plan and next steps
